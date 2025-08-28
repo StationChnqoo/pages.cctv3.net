@@ -15,7 +15,7 @@ interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: Api.SystemManage.User | null;
+  rowData?: ApiEndpoint | null;
 }
 
 const props = defineProps<Props>();
@@ -35,8 +35,8 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: $t('page.manage.user.addUser'),
-    edit: $t('page.manage.user.editUser')
+    add: '新增接口',
+    edit: '编辑接口'
   };
   return titles[props.operateType];
 });
@@ -96,7 +96,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" display-directive="show" :width="360" @after-enter="onShow">
+  <NDrawer v-model:show="visible" display-directive="show" :width="540" @after-enter="onShow">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="id" path="id">
@@ -127,7 +127,7 @@ watch(visible, () => {
           <NInput v-model:value="model.response" type="textarea" />
         </NFormItem>
         <NFormItem label="CURL" path="curl">
-          <NInput v-model:value="model.curl" />
+          <NInput v-model:value="model.curl" type="textarea" />
         </NFormItem>
         <NFormItem label="其他注意事项" path="remarks">
           <NDynamicInput v-model:value="model.remarks" preset="pair" key-placeholder="键" value-placeholder="值" />

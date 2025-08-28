@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, reactive } from 'vue';
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NButton, NEllipsis, NPopconfirm, NTag } from 'naive-ui';
+import type { ApiEndpoint } from '@/constants/t';
 import { deleteEndpoints, selectEndpoints } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
@@ -25,94 +26,107 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   columns: () => [
     {
       type: 'selection',
-      align: 'center',
-      width: 48
+      align: 'center'
     },
-    {
-      key: 'index',
-      title: '序号',
-      align: 'center',
-      width: 64,
-      render: (_: any, index: number) => index + 1
-    },
+    // {
+    //   key: 'index',
+    //   title: '序号',
+    //   align: 'center',
+    //   width: 50,
+    //   render: (_: any, index: number) => index + 1
+    // },
     {
       key: 'id',
       title: 'ID',
-      align: 'center',
-      minWidth: 100
+      align: 'center'
     },
     {
-      key: 'host',
-      title: '服务器',
-      align: 'center',
-      width: 100
+      key: 'introduce',
+      title: '简介',
+      minWidth: 150,
+      render: row => h(NEllipsis, { style: '' }, { default: () => row.introduce })
     },
     {
       key: 'path',
       title: '路径',
-      align: 'center',
-      minWidth: 100
+      minWidth: 250,
+      render: row => h(NEllipsis, {}, { default: () => row.path })
+    },
+    {
+      key: 'host',
+      title: '主机',
+      minWidth: 100,
+      render: row => h(NEllipsis, {}, { default: () => row.host })
     },
     {
       key: 'method',
-      title: '请求方式',
-      align: 'center',
-      width: 120
+      title: '方法',
+      render: row => h(NTag, { type: 'success' }, { default: () => row.method })
     },
     {
       key: 'request',
-      title: '请求',
-      align: 'center',
-      minWidth: 200
+      title: '请求体',
+      minWidth: 150,
+      render: row => h(NEllipsis, { style: '' }, { default: () => row.request })
     },
     {
       key: 'response',
-      title: '响应',
-      align: 'center',
-      minWidth: 200
+      title: '响应体',
+      minWidth: 150,
+      render: row => h(NEllipsis, { style: '' }, { default: () => row.response })
     },
     {
       key: 'curl',
-      title: 'curl',
-      align: 'center',
-      minWidth: 200
-    },
-    {
-      key: 'introduce',
-      title: '概述',
-      align: 'center',
-      width: 100
+      title: '可运行CURL',
+      minWidth: 150,
+      render: row => h(NEllipsis, { style: '' }, { default: () => row.curl })
     },
     {
       key: 'remarks',
-      title: '注意',
-      align: 'center',
-      width: 100
+      title: '其他备注',
+      minWidth: 150,
+      render: row => h(NEllipsis, { style: '' }, { default: () => row.remarks.join('') || '--' })
     },
     {
       key: 'operate',
-      title: $t('common.operate'),
+      title: '操作',
       align: 'center',
-      width: 130,
-      render: (row: Api.SystemManage.User) => {
+      minWidth: 250,
+      fixed: 'right',
+      render: (row: ApiEndpoint) => {
         return h('div', { class: 'flex-center gap-8px' }, [
           h(
             NButton,
             {
               type: 'primary',
               ghost: true,
-              size: 'small',
+              text: true,
               onClick: () => edit(row.id)
             },
-            { default: () => $t('common.edit') }
+            { default: () => '编辑' }
+          ),
+          h(
+            NButton,
+            {
+              type: 'success',
+              ghost: true,
+              size: 'small',
+              text: true,
+              onClick: () => edit(row.id)
+            },
+            { default: () => '详情' }
           ),
           h(
             NPopconfirm,
             { onPositiveClick: () => handleDelete(row.id) },
             {
-              default: () => $t('common.confirmDelete'),
+              default: () => '删除',
               trigger: () =>
-                h(NButton, { type: 'error', ghost: true, size: 'small' }, { default: () => $t('common.delete') })
+                h(
+                  NButton,
+                  { type: 'error', ghost: true, size: 'small', text: true },
+                  { default: () => $t('common.delete') }
+                )
             }
           )
         ]);
@@ -130,13 +144,13 @@ async function handleBatchDelete() {
   onBatchDeleted();
 }
 
-async function handleDelete(id: number) {
+async function handleDelete(id: string) {
   // request
   await deleteEndpoints({ id });
   onDeleted();
 }
 
-function edit(id: number) {
+function edit(id: string) {
   handleEdit(id);
 }
 </script>
@@ -144,7 +158,7 @@ function edit(id: number) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <UserSearch v-model:model="searchParams" @search="getDataByPage" />
-    <NCard :title="$t('page.manage.user.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+    <NCard title="接口列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -158,10 +172,11 @@ function edit(id: number) {
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
         :columns="columns"
+        bordered
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="1080"
         :loading="loading"
         remote
         :row-key="row => row.id"
@@ -178,4 +193,10 @@ function edit(id: number) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.one-line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>
