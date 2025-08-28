@@ -30,12 +30,31 @@ export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
   });
 }
 
-export function fetchEndpoints(params?: any) {
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function selectEndpoints(params?: any) {
   return request({
     baseURL: 'http://localhost:3000',
     url: '/api/endpoints',
     method: 'get',
     params
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function insertEndpoints(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/endpoints',
+    method: 'post',
+    data: params
   });
 }
 

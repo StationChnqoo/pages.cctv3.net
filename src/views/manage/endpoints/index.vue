@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, reactive } from 'vue';
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchEndpoints } from '@/service/api';
+import { selectEndpoints } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -16,7 +16,7 @@ const searchParams: Api.SystemManage.UserSearchParams = reactive({
 });
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useNaivePaginatedTable({
-  api: () => fetchEndpoints(searchParams),
+  api: () => selectEndpoints(searchParams),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
     searchParams.current = params.page;
@@ -30,7 +30,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'index',
-      title: $t('common.index'),
+      title: '序号',
       align: 'center',
       width: 64,
       render: (_: any, index: number) => index + 1

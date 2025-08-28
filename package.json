@@ -90,7 +90,8 @@
     "vue-router": "4.5.1",
     "wangeditor": "4.7.15",
     "xgplayer": "3.0.22",
-    "xlsx": "0.18.5"
+    "xlsx": "0.18.5",
+    "zod": "^4.1.4"
   },
   "devDependencies": {
     "@amap/amap-jsapi-types": "0.0.15",
