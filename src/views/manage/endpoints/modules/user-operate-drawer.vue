@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import type { ApiEndpoint } from '@/constants/t';
 import { ApiEndpointSchema } from '@/constants/t';
-import { insertEndpoints } from '@/service/api';
+import { insertEndpoints, updateEndpoints } from '@/service/api';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { nanoid } from '~/packages/utils/src';
@@ -69,7 +69,11 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
   // request
-  await insertEndpoints(model.value);
+  if (props.operateType === 'add') {
+    await insertEndpoints(model.value);
+  } else if (props.operateType === 'edit') {
+    await updateEndpoints(model.value);
+  }
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');

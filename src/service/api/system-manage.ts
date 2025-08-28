@@ -58,6 +58,34 @@ export function insertEndpoints(params?: any) {
   });
 }
 
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function updateEndpoints(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/endpoints',
+    method: 'put',
+    data: params
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function deleteEndpoints(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/endpoints',
+    method: 'delete',
+    params
+  });
+}
+
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({

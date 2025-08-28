@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { h, reactive } from 'vue';
 import { NButton, NPopconfirm } from 'naive-ui';
-import { selectEndpoints } from '@/service/api';
+import { deleteEndpoints, selectEndpoints } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -130,9 +130,9 @@ async function handleBatchDelete() {
   onBatchDeleted();
 }
 
-function handleDelete(id: number) {
+async function handleDelete(id: number) {
   // request
-  console.log(id);
+  await deleteEndpoints({ id });
   onDeleted();
 }
 
