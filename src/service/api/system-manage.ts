@@ -30,6 +30,15 @@ export function fetchGetUserList(params?: Api.SystemManage.UserSearchParams) {
   });
 }
 
+export function fetchEndpoints(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/endpoints',
+    method: 'get',
+    params
+  });
+}
+
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({

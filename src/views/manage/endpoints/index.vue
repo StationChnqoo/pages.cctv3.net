@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { h, reactive } from 'vue';
-import { NButton, NPopconfirm, NTag } from 'naive-ui';
-import { enableStatusRecord, userGenderRecord } from '@/constants/business';
-import { fetchGetUserList } from '@/service/api';
+import { NButton, NPopconfirm } from 'naive-ui';
+import { fetchEndpoints } from '@/service/api';
 import { useAppStore } from '@/store/modules/app';
 import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -13,17 +12,11 @@ const appStore = useAppStore();
 
 const searchParams: Api.SystemManage.UserSearchParams = reactive({
   current: 1,
-  size: 10,
-  status: null,
-  userName: null,
-  userGender: null,
-  nickName: null,
-  userPhone: null,
-  userEmail: null
+  size: 10
 });
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useNaivePaginatedTable({
-  api: () => fetchGetUserList(searchParams),
+  api: () => fetchEndpoints(searchParams),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
     searchParams.current = params.page;
@@ -43,64 +36,58 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       render: (_: any, index: number) => index + 1
     },
     {
-      key: 'userName',
-      title: $t('page.manage.user.userName'),
+      key: 'id',
+      title: 'ID',
       align: 'center',
       minWidth: 100
     },
     {
-      key: 'userGender',
-      title: $t('page.manage.user.userGender'),
+      key: 'host',
+      title: '服务器',
       align: 'center',
-      width: 100,
-      render: (row: Api.SystemManage.User) => {
-        if (row.userGender === null) return null;
-
-        const tagMap: Record<Api.SystemManage.UserGender, NaiveUI.ThemeColor> = {
-          1: 'primary',
-          2: 'error'
-        };
-
-        const label = $t(userGenderRecord[row.userGender]);
-
-        return h(NTag, { type: tagMap[row.userGender] }, { default: () => label });
-      }
+      width: 100
     },
     {
-      key: 'nickName',
-      title: $t('page.manage.user.nickName'),
+      key: 'path',
+      title: '路径',
       align: 'center',
       minWidth: 100
     },
     {
-      key: 'userPhone',
-      title: $t('page.manage.user.userPhone'),
+      key: 'method',
+      title: '请求方式',
       align: 'center',
       width: 120
     },
     {
-      key: 'userEmail',
-      title: $t('page.manage.user.userEmail'),
+      key: 'request',
+      title: '请求',
       align: 'center',
       minWidth: 200
     },
     {
-      key: 'status',
-      title: $t('page.manage.user.userStatus'),
+      key: 'response',
+      title: '响应',
       align: 'center',
-      width: 100,
-      render: (row: Api.SystemManage.User) => {
-        if (row.status === null) return null;
-
-        const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
-          1: 'success',
-          2: 'warning'
-        };
-
-        const label = $t(enableStatusRecord[row.status]);
-
-        return h(NTag, { type: tagMap[row.status] }, { default: () => label });
-      }
+      minWidth: 200
+    },
+    {
+      key: 'curl',
+      title: 'curl',
+      align: 'center',
+      minWidth: 200
+    },
+    {
+      key: 'introduce',
+      title: '概述',
+      align: 'center',
+      width: 100
+    },
+    {
+      key: 'remarks',
+      title: '注意',
+      align: 'center',
+      width: 100
     },
     {
       key: 'operate',

@@ -251,6 +251,16 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'manage_endpoints',
+        path: '/manage/endpoints',
+        component: 'view.manage_endpoints',
+        meta: {
+          title: '接口管理',
+          icon: 'material-symbols:cell-wifi-rounded',
+          keepAlive: true
+        }
+      },
+      {
         name: 'manage_menu',
         path: '/manage/menu',
         component: 'view.manage_menu',
