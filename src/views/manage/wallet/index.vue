@@ -56,7 +56,10 @@ const {
     {
       key: "id",
       title: "ID",
-      width: 150,
+      width: 100,
+      render(rowData, rowIndex) {
+        return h(NEllipsis, {}, { default: () => rowData.id });
+      },
     },
     {
       key: "sum",
