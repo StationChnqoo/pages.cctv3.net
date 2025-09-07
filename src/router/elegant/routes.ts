@@ -257,7 +257,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: '接口管理',
           icon: 'material-symbols:cell-wifi-rounded',
-          keepAlive: true
+          keepAlive: true,
+          i18nKey: 'route.manage_endpoints'
         }
       },
       {
@@ -308,6 +309,17 @@ export const generatedRoutes: GeneratedRoute[] = [
           hideInMenu: true,
           roles: ['R_ADMIN'],
           activeMenu: 'manage_user'
+        }
+      },
+      {
+        name: 'manage_wallet',
+        path: '/manage/wallet',
+        component: 'view.manage_wallet',
+        meta: {
+          title: '钱包管理',
+          icon: 'material-symbols:account-balance-wallet-outline-rounded',
+          keepAlive: true,
+          i18nKey: 'route.manage_wallet'
         }
       }
     ]

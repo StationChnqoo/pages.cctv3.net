@@ -1,24 +1,36 @@
 <script setup lang="ts">
-import { h, reactive } from "vue";
-import { NButton, NEllipsis, NPopconfirm, NTag } from "naive-ui";
-import type { ApiEndpoint } from "@/constants/t";
-import { deleteEndpoints, selectEndpoints } from "@/service/api";
-import { useAppStore } from "@/store/modules/app";
+import { Wallet } from "@/constants/t";
 import {
   defaultTransform,
   useNaivePaginatedTable,
   useTableOperate,
 } from "@/hooks/common/table";
 import { $t } from "@/locales";
+import { deleteWallet, selectWallets } from "@/service/api";
+import { useAppStore } from "@/store/modules/app";
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import { NButton, NEllipsis, NPopconfirm } from "naive-ui";
+import { h, reactive } from "vue";
 import OperateDrawer from "./modules/operate-drawer.vue";
-import UserSearch from "./modules/user-search.vue";
 
+dayjs.extend(weekOfYear);
 const appStore = useAppStore();
 
 const searchParams: Api.SystemManage.UserSearchParams = reactive({
   current: 1,
   size: 10,
 });
+
+const toFix = (n?: any) => {
+  return Number(n || 0).toFixed(1) + "K";
+};
+
+const sum = (array: string[]) => {
+  return array.reduce((count, it, index, array) => {
+    return count + Number(it);
+  }, 0);
+};
 
 const {
   columns,
@@ -29,7 +41,7 @@ const {
   loading,
   mobilePagination,
 } = useNaivePaginatedTable({
-  api: () => selectEndpoints(searchParams),
+  api: () => selectWallets(searchParams),
   transform: (response) => defaultTransform(response),
   onPaginationParamsChange: (params) => {
     searchParams.current = params.page;
@@ -39,82 +51,115 @@ const {
     {
       type: "selection",
       align: "center",
+      width: 50,
     },
-    // {
-    //   key: 'index',
-    //   title: '序号',
-    //   align: 'center',
-    //   width: 50,
-    //   render: (_: any, index: number) => index + 1
-    // },
     {
       key: "id",
       title: "ID",
-      align: "center",
+      width: 150,
     },
     {
-      key: "introduce",
-      title: "简介",
-      minWidth: 150,
-      render: (row) =>
-        h(NEllipsis, { style: "" }, { default: () => row.introduce }),
+      key: "sum",
+      title: "累计",
+      width: 75,
+      render: (row) => {
+        return toFix(
+          Number(row.alipay) +
+            Number(row.wechat) +
+            Number(row.cash) +
+            Number(row.unionpay) +
+            Number(row.eastmoney) +
+            sum(row.fund) +
+            sum(row.carpool),
+        );
+      },
+    },
+
+    {
+      key: "created_at",
+      title: "时间",
+      width: 75,
+      render(row) {
+        return `${dayjs(row.created_at).week()}周`;
+      },
     },
     {
-      key: "path",
-      title: "路径",
-      minWidth: 250,
-      render: (row) => h(NEllipsis, {}, { default: () => row.path }),
+      key: "alipay",
+      title: "支付宝",
+      width: 75,
+      render(rowData, rowIndex) {
+        return toFix(rowData.alipay);
+      },
     },
     {
-      key: "host",
-      title: "主机",
-      minWidth: 100,
-      render: (row) => h(NEllipsis, {}, { default: () => row.host }),
+      key: "wechat",
+      title: "微信",
+      width: 75,
+      render(rowData, rowIndex) {
+        return toFix(rowData.wechat);
+      },
     },
     {
-      key: "method",
-      title: "方法",
-      render: (row) =>
-        h(NTag, { type: "success" }, { default: () => row.method }),
+      key: "unionpay",
+      title: "银联",
+      width: 75,
+      render(rowData, rowIndex) {
+        return toFix(rowData.unionpay);
+      },
     },
     {
-      key: "request",
-      title: "请求体",
-      minWidth: 150,
-      render: (row) =>
-        h(NEllipsis, { style: "" }, { default: () => row.request }),
+      key: "cash",
+      title: "现金",
+      width: 75,
+      render(rowData, rowIndex) {
+        return toFix(rowData.cash);
+      },
     },
     {
-      key: "response",
-      title: "响应体",
-      minWidth: 150,
-      render: (row) =>
-        h(NEllipsis, { style: "" }, { default: () => row.response }),
+      key: "eastmoney",
+      title: "股票",
+      width: 75,
+      render(rowData, rowIndex) {
+        return toFix(rowData.eastmoney);
+      },
     },
     {
-      key: "curl",
-      title: "可运行CURL",
-      minWidth: 150,
-      render: (row) => h(NEllipsis, { style: "" }, { default: () => row.curl }),
-    },
-    {
-      key: "remarks",
-      title: "其他备注",
-      minWidth: 150,
+      key: "fund",
+      title: "公积金",
+      width: 125,
       render: (row) =>
         h(
           NEllipsis,
-          { style: "" },
-          { default: () => row.remarks.join("") || "--" },
+          {},
+          { default: () => `[${row.fund.map((it) => toFix(it)).join(", ")}]` },
         ),
+    },
+    {
+      key: "carpool",
+      title: "顺风车",
+      width: 125,
+      render: (row) =>
+        h(
+          NEllipsis,
+          {},
+          {
+            default: () => `[${row.carpool.map((it) => toFix(it)).join(", ")}]`,
+          },
+        ),
+    },
+    {
+      key: "updated_at",
+      title: "修改时间",
+      width: 100,
+      render: (row) => dayjs(row.updated_at).format("YYYY-MM-DD"),
     },
     {
       key: "operate",
       title: "操作",
       align: "center",
-      minWidth: 250,
       fixed: "right",
-      render: (row: ApiEndpoint) => {
+      width: 150,
+      render: (row: Wallet) => {
         return h("div", { class: "flex-center gap-8px" }, [
           h(
             NButton,
@@ -167,7 +212,7 @@ const {
   onDeleted,
 } = useTableOperate(data, "id", getData);
 
-const handleBatchDelete = () => {
+const handleBatchDelete = async () => {
   // request
   console.log(checkedRowKeys.value);
   onBatchDeleted();
@@ -175,7 +220,7 @@ const handleBatchDelete = () => {
 
 const handleDelete = async (id: string) => {
   // request
-  await deleteEndpoints({ id });
+  await deleteWallet({ id });
   onDeleted();
 };
 
@@ -188,9 +233,8 @@ const edit = (id: string) => {
   <div
     class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto"
   >
-    <UserSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard
-      title="接口列表"
+      title="钱包列表"
       :bordered="false"
       size="small"
       class="card-wrapper sm:flex-1-hidden"
@@ -212,7 +256,7 @@ const edit = (id: string) => {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1080"
+        :scroll-x="720"
         :loading="loading"
         remote
         :row-key="(row) => row.id"

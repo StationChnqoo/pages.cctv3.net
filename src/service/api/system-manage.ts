@@ -86,6 +86,62 @@ export function deleteEndpoints(params?: any) {
   });
 }
 
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function selectWallets(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/wallet',
+    method: 'get',
+    params
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function insertWallet(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/wallet',
+    method: 'post',
+    data: params
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function updateWallet(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/wallet',
+    method: 'put',
+    data: params
+  });
+}
+
+/**
+ *
+ * @param params
+ * @returns
+ */
+export function deleteWallet(params?: any) {
+  return request({
+    baseURL: 'http://localhost:3000',
+    url: '/api/wallet',
+    method: 'delete',
+    params
+  });
+}
+
 /** get menu list */
 export function fetchGetMenuList() {
   return request<Api.SystemManage.MenuList>({

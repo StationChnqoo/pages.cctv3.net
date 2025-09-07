@@ -25,7 +25,7 @@
   "i18n-ally.parsers.typescript.compilerOptions": {
     "moduleResolution": "node"
   },
-  "prettier.enable": false,
+  "prettier.enable": true,
   "typescript.tsdk": "node_modules/typescript/lib",
   "unocss.root": ["./"]
 }
