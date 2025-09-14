@@ -3,7 +3,7 @@ import type { Wallet } from "@/constants/t";
 import { WalletSchema } from "@/constants/t";
 import { useNaiveForm } from "@/hooks/common/form";
 import { $t } from "@/locales";
-import { insertEndpoints, insertWallet, updateEndpoints, updateWallet } from "@/service/api";
+import { insertWallet, updateWallet } from "@/service/api";
 import { computed, ref, watch } from "vue";
 import { nanoid } from "~/packages/utils/src";
 

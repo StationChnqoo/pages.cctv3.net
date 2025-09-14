@@ -161,15 +161,15 @@ const {
       title: "操作",
       align: "center",
       fixed: "right",
-      width: 150,
+      width: 200,
       render: (row: Wallet) => {
         return h("div", { class: "flex-center gap-8px" }, [
           h(
             NButton,
             {
               type: "primary",
+              size: "small",
               ghost: true,
-              text: true,
               onClick: () => edit(row.id),
             },
             { default: () => "编辑" },
@@ -178,9 +178,8 @@ const {
             NButton,
             {
               type: "success",
-              ghost: true,
               size: "small",
-              text: true,
+              ghost: true,
               onClick: () => edit(row.id),
             },
             { default: () => "详情" },
@@ -193,7 +192,7 @@ const {
               trigger: () =>
                 h(
                   NButton,
-                  { type: "error", ghost: true, size: "small", text: true },
+                  { type: "error", ghost: true, size: "small" },
                   { default: () => $t("common.delete") },
                 ),
             },
@@ -259,7 +258,7 @@ const edit = (id: string) => {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="720"
+        :scroll-x="1080"
         :loading="loading"
         remote
         :row-key="(row) => row.id"

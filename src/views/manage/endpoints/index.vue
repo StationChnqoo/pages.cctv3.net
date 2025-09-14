@@ -51,24 +51,27 @@ const {
       key: "id",
       title: "ID",
       align: "center",
+      width: 100,
+       render: (row) =>
+        h(NEllipsis, { style: "" }, { default: () => row.id }),
     },
     {
       key: "introduce",
       title: "简介",
-      minWidth: 150,
+      width: 150,
       render: (row) =>
         h(NEllipsis, { style: "" }, { default: () => row.introduce }),
     },
     {
       key: "path",
       title: "路径",
-      minWidth: 250,
+      width: 250,
       render: (row) => h(NEllipsis, {}, { default: () => row.path }),
     },
     {
       key: "host",
       title: "主机",
-      minWidth: 100,
+      width: 100,
       render: (row) => h(NEllipsis, {}, { default: () => row.host }),
     },
     {
@@ -80,39 +83,39 @@ const {
     {
       key: "request",
       title: "请求体",
-      minWidth: 150,
+      width: 150,
       render: (row) =>
         h(NEllipsis, { style: "" }, { default: () => row.request }),
     },
     {
       key: "response",
       title: "响应体",
-      minWidth: 150,
+      width: 150,
       render: (row) =>
         h(NEllipsis, { style: "" }, { default: () => row.response }),
     },
     {
       key: "curl",
       title: "可运行CURL",
-      minWidth: 150,
+      width: 150,
       render: (row) => h(NEllipsis, { style: "" }, { default: () => row.curl }),
     },
     {
       key: "remarks",
       title: "其他备注",
-      minWidth: 150,
+      width: 150,
       render: (row) =>
         h(
           NEllipsis,
           { style: "" },
-          { default: () => row.remarks.join("") || "--" },
+          { default: () => row.remarks.map(it => it.value).join("") || "--" },
         ),
     },
     {
       key: "operate",
       title: "操作",
       align: "center",
-      minWidth: 250,
+      width: 200,
       fixed: "right",
       render: (row: ApiEndpoint) => {
         return h("div", { class: "flex-center gap-8px" }, [
@@ -121,7 +124,7 @@ const {
             {
               type: "primary",
               ghost: true,
-              text: true,
+              size: 'small',
               onClick: () => edit(row.id),
             },
             { default: () => "编辑" },
@@ -132,7 +135,6 @@ const {
               type: "success",
               ghost: true,
               size: "small",
-              text: true,
               onClick: () => edit(row.id),
             },
             { default: () => "详情" },
@@ -145,7 +147,7 @@ const {
               trigger: () =>
                 h(
                   NButton,
-                  { type: "error", ghost: true, size: "small", text: true },
+                  { type: "error", ghost: true, size: "small" },
                   { default: () => $t("common.delete") },
                 ),
             },
